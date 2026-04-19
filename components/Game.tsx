@@ -237,12 +237,12 @@ export default function Game() {
       <header className="relative border-b border-white/10 backdrop-blur-sm px-3 py-2">
         <div className="flex items-center justify-between">
           {/* Left buttons */}
-          <div className="flex items-center gap-1.5">
-            <button onClick={() => setShowStats(true)} className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors" title="İstatistikler">📊</button>
-            <button onClick={() => setShowMissions(true)} className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors" title="Görevler">
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowStats(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="İstatistikler">📊</button>
+            <button onClick={() => setShowMissions(true)} className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Görevler">
               🎯
               {completedMissions < missions.length && (
-                <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-orange-500 rounded-full border border-zinc-900" />
+                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-orange-500 rounded-full border-2 border-zinc-900" />
               )}
             </button>
           </div>
@@ -264,9 +264,9 @@ export default function Game() {
           </div>
 
           {/* Right buttons */}
-          <div className="flex items-center gap-1.5">
-            <button onClick={() => setShowDifficulty(true)} className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors" title="Zorluk">⚙️</button>
-            <button onClick={() => setShowLeaderboard(true)} className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors" title="Liderboard">🏆</button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowDifficulty(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Zorluk">⚙️</button>
+            <button onClick={() => setShowLeaderboard(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Liderboard">🏆</button>
           </div>
         </div>
 
