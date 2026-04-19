@@ -10,72 +10,64 @@ type Props = {
   shake: boolean;
 };
 
-const stateBg: Record<LetterState, string> = {
-  correct: "bg-green-600 border-green-600 text-white",
-  present: "bg-yellow-500 border-yellow-500 text-white",
-  absent: "bg-zinc-600 border-zinc-600 text-white",
-  empty: "bg-transparent border-zinc-700 text-white",
-  tbd: "bg-transparent border-zinc-400 text-white",
-};
+function getTileStyle(state: LetterState, submitted: boolean, letter: string): string {
+  const base = "relative w-14 h-14 flex items-center justify-center text-2xl font-black uppercase select-none rounded-xl border-2 transition-all duration-100";
+
+  if (!submitted) {
+    if (letter) return `${base} border-purple-500 bg-purple-500/10 text-white scale-105 shadow-lg shadow-purple-500/20`;
+    return `${base} border-white/10 bg-white/5 text-white`;
+  }
+
+  switch (state) {
+    case "correct":
+      return `${base} border-emerald-500 bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30`;
+    case "present":
+      return `${base} border-amber-500 bg-gradient-to-b from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30`;
+    case "absent":
+      return `${base} border-zinc-600 bg-gradient-to-b from-zinc-700 to-zinc-800 text-zinc-300`;
+    default:
+      return `${base} border-white/10 bg-white/5 text-white`;
+  }
+}
 
 export default function Board({ rows, currentRow, wordLength, shake }: Props) {
-  const [flipping, setFlipping] = useState<number | null>(null);
-  const [flipCol, setFlipCol] = useState<number>(-1);
+  const [revealed, setRevealed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (currentRow === 0) return;
     const prev = currentRow - 1;
     if (!rows[prev]?.submitted) return;
 
-    setFlipping(prev);
-    setFlipCol(-1);
-
-    let col = 0;
-    const interval = setInterval(() => {
-      setFlipCol(col);
-      col++;
-      if (col >= wordLength) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setFlipping(null);
-          setFlipCol(-1);
-        }, 300);
-      }
-    }, 80);
-
-    return () => clearInterval(interval);
-  }, [currentRow]);
+    for (let col = 0; col < wordLength; col++) {
+      const key = `${prev}-${col}`;
+      setTimeout(() => {
+        setRevealed((r) => new Set([...r, key]));
+      }, col * 90);
+    }
+  }, [currentRow, wordLength]);
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       {rows.map((row, rIdx) => (
         <div
           key={rIdx}
-          className={`flex gap-1.5 ${
-            shake && rIdx === currentRow ? "animate-shake" : ""
-          }`}
+          className={`flex gap-2 ${shake && rIdx === currentRow ? "animate-shake" : ""}`}
         >
           {Array.from({ length: wordLength }).map((_, cIdx) => {
             const letter = row.letters[cIdx] || "";
-            const state = row.submitted ? row.states[cIdx] : letter ? "tbd" : "empty";
-            const isFlipping = flipping === rIdx && cIdx <= flipCol;
+            const isRevealed = revealed.has(`${rIdx}-${cIdx}`);
+            const state: LetterState = isRevealed ? row.states[cIdx] : (letter && !row.submitted ? "tbd" : "empty");
 
             return (
               <div
                 key={cIdx}
-                className={`
-                  relative w-14 h-14 flex items-center justify-center
-                  border-2 text-2xl font-bold uppercase select-none
-                  transition-transform duration-100
-                  ${stateBg[state]}
-                  ${letter && !row.submitted ? "scale-105" : "scale-100"}
-                  ${isFlipping ? "animate-flip" : ""}
-                `}
+                className={getTileStyle(state, isRevealed, letter)}
                 style={{
-                  transitionDelay: row.submitted ? `${cIdx * 80}ms` : "0ms",
+                  perspective: "250px",
+                  transform: isRevealed ? undefined : undefined,
                 }}
               >
-                {letter}
+                <span className="drop-shadow-sm">{letter}</span>
               </div>
             );
           })}

@@ -16,17 +16,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default function ResultModal({
-  status,
-  target,
-  guesses,
-  score,
-  time,
-  categoryName,
-  rows,
-  onShowLeaderboard,
-  onClose,
-}: Props) {
+export default function ResultModal({ status, target, guesses, score, time, categoryName, rows, onShowLeaderboard, onClose }: Props) {
   const [copied, setCopied] = useState(false);
   const won = status === "won";
 
@@ -53,63 +43,52 @@ export default function ResultModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-sm p-6 text-center">
-        <div className="text-5xl mb-3">{won ? "🎉" : "😔"}</div>
-        <h2 className="text-2xl font-bold text-white mb-1">
-          {won ? "Tebrikler!" : "Olmadı!"}
-        </h2>
-        <p className="text-zinc-400 mb-4 text-sm">
-          {won
-            ? `${guesses}. tahminde buldun!`
-            : `Doğru kelime: `}
-          {!won && (
-            <span className="text-white font-bold text-base">{target}</span>
-          )}
-        </p>
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}>
+      <div className="w-full max-w-sm animate-bounce-in">
+        <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: "linear-gradient(145deg, #1e1b4b, #1a103a)" }}>
+          <div className={`h-1 ${won ? "bg-gradient-to-r from-emerald-500 to-cyan-500" : "bg-gradient-to-r from-red-500 to-orange-500"}`} />
 
-        {won && (
-          <div className="flex justify-center gap-4 mb-4">
-            <div className="bg-zinc-800 rounded-xl px-4 py-3">
-              <p className="text-zinc-400 text-xs">Puan</p>
-              <p className="text-yellow-400 font-bold text-xl">{score}</p>
-            </div>
-            <div className="bg-zinc-800 rounded-xl px-4 py-3">
-              <p className="text-zinc-400 text-xs">Süre</p>
-              <p className="text-white font-bold text-xl">{time}s</p>
-            </div>
-            <div className="bg-zinc-800 rounded-xl px-4 py-3">
-              <p className="text-zinc-400 text-xs">Tahmin</p>
-              <p className="text-white font-bold text-xl">{guesses}/6</p>
+          <div className="p-6 text-center">
+            <div className="text-5xl mb-3">{won ? "🎉" : "😔"}</div>
+            <h2 className="text-2xl font-black text-white mb-1">
+              {won ? "Harika!" : "Olmadı!"}
+            </h2>
+            <p className="text-zinc-400 text-sm mb-5">
+              {won ? `${guesses}. tahminde buldun!` : (
+                <>Doğru kelime: <span className="text-white font-black text-base">{target}</span></>
+              )}
+            </p>
+
+            {won && (
+              <div className="flex justify-center gap-3 mb-5">
+                {[
+                  { label: "Puan", value: score, color: "text-yellow-400" },
+                  { label: "Süre", value: `${time}s`, color: "text-cyan-400" },
+                  { label: "Tahmin", value: `${guesses}/6`, color: "text-purple-400" },
+                ].map(({ label, value, color }) => (
+                  <div key={label} className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-2">
+                    <p className="text-zinc-500 text-xs mb-1">{label}</p>
+                    <p className={`font-black text-lg ${color}`}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2">
+              <button onClick={handleShare} className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95" style={{ background: "linear-gradient(135deg, #059669, #0891b2)", color: "white" }}>
+                {copied ? "✓ Kopyalandı!" : "📋 Sonucu Paylaş"}
+              </button>
+              <button onClick={handleChallenge} className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95" style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)", color: "white" }}>
+                🤜 Arkadaşına Meydan Oku
+              </button>
+              <button onClick={onShowLeaderboard} className="w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95" style={{ background: "linear-gradient(135deg, #d97706, #f59e0b)", color: "black" }}>
+                🏆 Liderboard&apos;u Gör
+              </button>
+              <button onClick={onClose} className="w-full py-2 text-zinc-500 hover:text-zinc-300 text-sm transition-colors">
+                Kapat
+              </button>
             </div>
           </div>
-        )}
-
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={handleShare}
-            className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl transition-colors"
-          >
-            {copied ? "✓ Kopyalandı!" : "📋 Sonucu Paylaş"}
-          </button>
-          <button
-            onClick={handleChallenge}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors"
-          >
-            🤜 Arkadaşına Meydan Oku
-          </button>
-          <button
-            onClick={onShowLeaderboard}
-            className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-xl transition-colors"
-          >
-            🏆 Liderboard
-          </button>
-          <button
-            onClick={onClose}
-            className="w-full text-zinc-400 hover:text-white py-2 text-sm transition-colors"
-          >
-            Kapat
-          </button>
         </div>
       </div>
     </div>
