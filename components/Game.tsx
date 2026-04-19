@@ -232,7 +232,7 @@ export default function Game() {
   const diffColors: Record<Difficulty, string> = { kolay: "#10b981", normal: "#8b5cf6", zor: "#ef4444" };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#000000" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(160deg, #050d1a 0%, #0a1628 50%, #060e1f 100%)" }}>
       {/* BG glow effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl" />
