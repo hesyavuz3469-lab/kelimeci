@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import confetti from "canvas-confetti";
 import Board from "./Board";
 import Keyboard from "./Keyboard";
 import ResultModal from "./ResultModal";
@@ -179,6 +180,11 @@ export default function Game() {
               saveToLeaderboard({ name: username, score: finalScore, guesses: newRow, time: timeSeconds, date: getTodayKey() });
             }
 
+            if (won) {
+              confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ["#7c3aed", "#db2777", "#06b6d4", "#10b981", "#f59e0b"] });
+              setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.3 }, angle: 60, colors: ["#a78bfa", "#f472b6"] }), 300);
+              setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.3 }, angle: 120, colors: ["#34d399", "#fbbf24"] }), 500);
+            }
             setTimeout(() => setShowResult(true), won ? 1800 : 800);
           }, 300);
         }
@@ -226,11 +232,12 @@ export default function Game() {
   const diffColors: Record<Difficulty, string> = { kolay: "#10b981", normal: "#8b5cf6", zor: "#ef4444" };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #0f0f1a 0%, #1a0f2e 50%, #0f1a1f 100%)" }}>
-      {/* BG decorations */}
+    <div className="min-h-screen flex flex-col" style={{ background: "#000000" }}>
+      {/* BG glow effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl" />
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] bg-cyan-500/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-72 h-72 bg-pink-600/10 rounded-full blur-3xl" />
       </div>
 
       {/* Header */}
@@ -238,11 +245,11 @@ export default function Game() {
         <div className="flex items-center justify-between">
           {/* Left buttons */}
           <div className="flex items-center gap-2">
-            <button onClick={() => setShowStats(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="İstatistikler">📊</button>
-            <button onClick={() => setShowMissions(true)} className="relative w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Görevler">
+            <button onClick={() => setShowStats(true)} className="w-12 h-12 flex items-center justify-center rounded-xl border transition-all text-2xl hover:scale-110 active:scale-95" style={{ background: "rgba(124,58,237,0.15)", borderColor: "rgba(124,58,237,0.4)", boxShadow: "0 0 12px rgba(124,58,237,0.3)" }} title="İstatistikler">📊</button>
+            <button onClick={() => setShowMissions(true)} className="relative w-12 h-12 flex items-center justify-center rounded-xl border transition-all text-2xl hover:scale-110 active:scale-95" style={{ background: "rgba(249,115,22,0.15)", borderColor: "rgba(249,115,22,0.4)", boxShadow: "0 0 12px rgba(249,115,22,0.3)" }} title="Görevler">
               🎯
               {completedMissions < missions.length && (
-                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-orange-500 rounded-full border-2 border-zinc-900" />
+                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-orange-500 rounded-full border-2 border-black" />
               )}
             </button>
           </div>
@@ -265,8 +272,8 @@ export default function Game() {
 
           {/* Right buttons */}
           <div className="flex items-center gap-2">
-            <button onClick={() => setShowDifficulty(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Zorluk">⚙️</button>
-            <button onClick={() => setShowLeaderboard(true)} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-2xl" title="Liderboard">🏆</button>
+            <button onClick={() => setShowDifficulty(true)} className="w-12 h-12 flex items-center justify-center rounded-xl border transition-all text-2xl hover:scale-110 active:scale-95" style={{ background: "rgba(6,182,212,0.15)", borderColor: "rgba(6,182,212,0.4)", boxShadow: "0 0 12px rgba(6,182,212,0.3)" }} title="Zorluk">⚙️</button>
+            <button onClick={() => setShowLeaderboard(true)} className="w-12 h-12 flex items-center justify-center rounded-xl border transition-all text-2xl hover:scale-110 active:scale-95" style={{ background: "rgba(234,179,8,0.15)", borderColor: "rgba(234,179,8,0.4)", boxShadow: "0 0 12px rgba(234,179,8,0.3)" }} title="Liderboard">🏆</button>
           </div>
         </div>
 

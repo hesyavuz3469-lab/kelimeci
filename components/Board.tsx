@@ -21,13 +21,13 @@ function getTileStyle(state: LetterState, submitted: boolean, letter: string): s
 
   switch (state) {
     case "correct":
-      return `${base} border-emerald-500 bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30`;
+      return `${base} border-emerald-400 text-white` + ` shadow-[0_0_20px_rgba(52,211,153,0.6)]`;
     case "present":
-      return `${base} border-amber-500 bg-gradient-to-b from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30`;
+      return `${base} border-amber-400 text-white` + ` shadow-[0_0_20px_rgba(251,191,36,0.6)]`;
     case "absent":
-      return `${base} border-zinc-600 bg-gradient-to-b from-zinc-700 to-zinc-800 text-zinc-300`;
+      return `${base} border-zinc-600 bg-zinc-900 text-zinc-400`;
     default:
-      return `${base} border-white/10 bg-white/5 text-white`;
+      return `${base} border-white/15 bg-white/5 text-white`;
   }
 }
 
@@ -61,10 +61,21 @@ export default function Board({ rows, currentRow, wordLength, shake, revealedHin
             const isHint = !row.submitted && !!hintLetter && !row.letters[cIdx];
             const state: LetterState = isRevealed ? row.states[cIdx] : (letter && !row.submitted ? "tbd" : "empty");
 
+            const tileStyle: React.CSSProperties = isRevealed
+              ? state === "correct"
+                ? { background: "linear-gradient(135deg, #059669, #10b981)", boxShadow: "0 0 24px rgba(16,185,129,0.7), inset 0 1px 0 rgba(255,255,255,0.2)" }
+                : state === "present"
+                ? { background: "linear-gradient(135deg, #d97706, #f59e0b)", boxShadow: "0 0 24px rgba(245,158,11,0.7), inset 0 1px 0 rgba(255,255,255,0.2)" }
+                : { background: "linear-gradient(135deg, #27272a, #3f3f46)" }
+              : letter
+              ? { boxShadow: "0 0 12px rgba(168,85,247,0.4)" }
+              : {};
+
             return (
               <div
                 key={cIdx}
                 className={`${getTileStyle(state, isRevealed, letter)} ${isHint ? "ring-2 ring-yellow-400/60" : ""}`}
+                style={tileStyle}
               >
                 <span className="drop-shadow-sm">{letter}</span>
                 {isHint && <span className="absolute top-0.5 right-1 text-yellow-400 text-xs">💡</span>}
