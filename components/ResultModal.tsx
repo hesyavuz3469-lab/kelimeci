@@ -12,11 +12,15 @@ type Props = {
   time: number;
   categoryName: string;
   rows: GuessRow[];
+  difficulty?: string;
+  hintsUsed?: number;
+  xpGained?: number;
+  streak?: number;
   onShowLeaderboard: () => void;
   onClose: () => void;
 };
 
-export default function ResultModal({ status, target, guesses, score, time, categoryName, rows, onShowLeaderboard, onClose }: Props) {
+export default function ResultModal({ status, target, guesses, score, time, categoryName, rows, xpGained, streak, onShowLeaderboard, onClose }: Props) {
   const [copied, setCopied] = useState(false);
   const won = status === "won";
 
@@ -58,6 +62,13 @@ export default function ResultModal({ status, target, guesses, score, time, cate
                 <>Doğru kelime: <span className="text-white font-black text-base">{target}</span></>
               )}
             </p>
+
+            {won && xpGained && (
+              <div className="mb-3 py-2 px-4 rounded-xl inline-block" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.3), rgba(219,39,119,0.3))", border: "1px solid rgba(124,58,237,0.4)" }}>
+                <span className="text-yellow-400 font-black">⭐ +{xpGained} XP</span>
+                {streak && streak > 1 && <span className="text-orange-400 font-bold ml-2">🔥 {streak} gün serisi!</span>}
+              </div>
+            )}
 
             {won && (
               <div className="flex justify-center gap-3 mb-5">

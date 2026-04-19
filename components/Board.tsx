@@ -8,6 +8,7 @@ type Props = {
   currentRow: number;
   wordLength: number;
   shake: boolean;
+  revealedHints?: Record<number, string>;
 };
 
 function getTileStyle(state: LetterState, submitted: boolean, letter: string): string {
@@ -30,7 +31,7 @@ function getTileStyle(state: LetterState, submitted: boolean, letter: string): s
   }
 }
 
-export default function Board({ rows, currentRow, wordLength, shake }: Props) {
+export default function Board({ rows, currentRow, wordLength, shake, revealedHints = {} }: Props) {
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -54,20 +55,19 @@ export default function Board({ rows, currentRow, wordLength, shake }: Props) {
           className={`flex gap-2 ${shake && rIdx === currentRow ? "animate-shake" : ""}`}
         >
           {Array.from({ length: wordLength }).map((_, cIdx) => {
-            const letter = row.letters[cIdx] || "";
+            const hintLetter = !row.submitted && rIdx === currentRow ? (revealedHints[cIdx] ?? "") : "";
+            const letter = row.letters[cIdx] || hintLetter;
             const isRevealed = revealed.has(`${rIdx}-${cIdx}`);
+            const isHint = !row.submitted && !!hintLetter && !row.letters[cIdx];
             const state: LetterState = isRevealed ? row.states[cIdx] : (letter && !row.submitted ? "tbd" : "empty");
 
             return (
               <div
                 key={cIdx}
-                className={getTileStyle(state, isRevealed, letter)}
-                style={{
-                  perspective: "250px",
-                  transform: isRevealed ? undefined : undefined,
-                }}
+                className={`${getTileStyle(state, isRevealed, letter)} ${isHint ? "ring-2 ring-yellow-400/60" : ""}`}
               >
                 <span className="drop-shadow-sm">{letter}</span>
+                {isHint && <span className="absolute top-0.5 right-1 text-yellow-400 text-xs">💡</span>}
               </div>
             );
           })}
